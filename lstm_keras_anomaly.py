@@ -1,11 +1,12 @@
 """ 
-Based directly upon:
+Based upon
 https://github.com/Vict0rSch/deep_learning/tree/master/keras/recurrent
 which is inspired by example from
 https://github.com/Vict0rSch/deep_learning/tree/master/keras/recurrent
 
 Uses the TensorFlow backend
-The basic idea is to detect anomalies in a time-series.
+The basic idea is to detect anomalies in synthetic, normalized 
+time-series data.
 """
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,6 +15,8 @@ from keras.layers.core import Dense, Activation, Dropout
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
 from numpy import arange, sin, pi, random
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from math import sqrt
 
 np.random.seed(1234)
 
@@ -22,7 +25,6 @@ sequence_length = 100
 random_data_dup = 10  # each sample randomly duplicated between 0 and 9 times, see dropin function
 epochs = 1
 batch_size = 50
-
 
 def dropin(X, y):
     """ The name suggests the inverse of dropout, i.e. adding more samples. See Data Augmentation section at
@@ -60,30 +62,27 @@ def gen_wave():
     wave1[insert:insert + 50] = wave1[insert:insert + 50] + wave3
     return wave1 + wave2
 
-
-def z_norm(result):
-    result_mean = result.mean()
-    result_std = result.std()
-    result -= result_mean
-    result /= result_std
-    return result, result_mean
-
-
 def get_split_prep_data(train_start, train_end,
                           test_start, test_end):
     data = gen_wave()
+
+    # To standardize (StandardScaler) or normalize (MinMaxScaler)
+    # on training data (try each - observe loss)
+    # scaler = StandardScaler() # This assumes a Gaussian distribution
+    scaler = MinMaxScaler(feature_range=(0, 1)) # Normalize from 0 - 1
+
     print("Length of Data", len(data))
 
-    # train data
+    # Train data
     print("Creating train data...")
 
     result = []
     for index in range(train_start, train_end - sequence_length):
         result.append(data[index: index + sequence_length])
     result = np.array(result)  # shape (samples, sequence_length)
-    result, result_mean = z_norm(result)
+    scaler = scaler.fit(result)
+    result = scaler.transform(result)
 
-    print("Mean of train data : ", result_mean)
     print("Train data shape  : ", result.shape)
 
     train = result[train_start:train_end, :]
@@ -92,16 +91,15 @@ def get_split_prep_data(train_start, train_end,
     y_train = train[:, -1]
     X_train, y_train = dropin(X_train, y_train)
 
-    # test data
+    # Test data
     print("Creating test data...")
 
     result = []
     for index in range(test_start, test_end - sequence_length):
         result.append(data[index: index + sequence_length])
     result = np.array(result)  # shape (samples, sequence_length)
-    result, result_mean = z_norm(result)
+    result = scaler.transform(result)
 
-    print("Mean of test data : ", result_mean)
     print("Test data shape  : ", result.shape)
 
     X_test = result[:, :-1]
@@ -136,7 +134,8 @@ def build_model():
     model.add(Activation("linear"))
 
     start = time.time()
-    model.compile(loss="mse", optimizer="rmsprop")
+    # Loss function and optimizer (SGD-based)
+    model.compile(loss="mse", optimizer="rmsprop") # also can try:  optimizer="adam"
     print("Compilation Time : ", time.time() - start)
     return model
 
@@ -145,7 +144,7 @@ def run_network(model=None, data=None):
 
     if data is None:
         print('Loading data... ')
-        # train on first 700 samples and test on next 300 samples (has anomaly)
+        # Train on first 700 samples and test on next 300 samples (has anomaly)
         X_train, y_train, X_test, y_test = get_split_prep_data(0, 700, 500, 1000)
     else:
         X_train, y_train, X_test, y_test = data
@@ -170,7 +169,7 @@ def run_network(model=None, data=None):
         return model, y_test, 0
 
     try:
-        plt.figure(1)
+        plt.savefig('result.png')
         plt.subplot(311)
         plt.title("Actual Test Signal w/Anomalies")
         plt.plot(y_test[:len(y_test)], 'b')
@@ -178,14 +177,17 @@ def run_network(model=None, data=None):
         plt.title("Predicted Signal")
         plt.plot(predicted[:len(y_test)], 'g')
         plt.subplot(313)
-        plt.title("Squared Error")
+        plt.title("Mean Squared Error")
         mse = ((y_test - predicted) ** 2)
         plt.plot(mse, 'r')
-        plt.show()
+        plt.savefig('result.png', bbox_inches='tight')
     except Exception as e:
         print("plotting exception")
         print(str(e))
+
     print('Training duration (s) : ', time.time() - global_start_time)
+
+    print("Anomalies above MSE threshold:  ", np.where(predicted > 1.0))
 
     return model, y_test, predicted
 
