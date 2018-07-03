@@ -25,6 +25,7 @@ sequence_length = 100
 random_data_dup = 10  # each sample randomly duplicated between 0 and 9 times, see dropin function
 epochs = 1
 batch_size = 50
+mse_threshold = 0.1 # anomaly MSE threshold
 
 def dropin(X, y):
     """ The name suggests the inverse of dropout, i.e. adding more samples. See Data Augmentation section at
@@ -187,7 +188,7 @@ def run_network(model=None, data=None):
 
     print('Training duration (s) : ', time.time() - global_start_time)
 
-    print("Anomalies above MSE threshold:  ", np.where(predicted > 1.0))
+    print("Anomalies above MSE threshold:  ", np.where(mse > mse_threshold))
 
     return model, y_test, predicted
 
