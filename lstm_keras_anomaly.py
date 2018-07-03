@@ -1,6 +1,6 @@
 """ 
-Based upon
-https://github.com/Vict0rSch/deep_learning/tree/master/keras/recurrent
+Based closely upon
+https://github.com/aurotripathy/lstm-anomaly-detect
 which is inspired by example from
 https://github.com/Vict0rSch/deep_learning/tree/master/keras/recurrent
 
