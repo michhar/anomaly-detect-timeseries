@@ -18,3 +18,4 @@ Other Approaches:
 1.  https://github.com/aurotripathy/lstm-anomaly-detect
 2.  https://github.com/Vict0rSch/deep_learning/tree/master/keras/recurrent
 3.  http://simaaron.github.io/Estimating-rainfall-from-weather-radar-readings-using-recurrent-neural-networks/
+4.  https://github.com/khundman/telemanom/tree/no-labels
