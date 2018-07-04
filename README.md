@@ -1,10 +1,9 @@
 # Using an LSTM and Other Algorithms for Unsupervised Anomaly Detection
 
-Using an LSTM (Long-Short Term Memory) algorithm on synthetic time series data for unsupervised anomaly detection.  It uses the Mean Squared Error as a measure of outliers in this type of data. 
+Using an LSTM (Long Short-Term Memory) algorithm on synthetic time series data for unsupervised anomaly detection.  It uses the Mean Squared Error as a measure of outliers in this type of data. 
 
 Some TODO:
 - [x] Keras (TF backend)
-- [ ] Vary sequence length (RNNs accept input sequences of varying lengths due to weight sharing in the hidden layers!)
 - [ ] Estimates on real-world data (e.g. [this Kaggle rain dataset](https://www.kaggle.com/c/how-much-did-it-rain-ii/data))
 - [ ] PyTorch port
 
