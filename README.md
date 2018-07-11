@@ -1,6 +1,6 @@
 # Using an LSTM and Other Algorithms for Unsupervised Anomaly Detection
 
-Using an LSTM (Long-Short Term Memory) algorithm on synthetic time series data for unsupervised anomaly detection.  It uses the Mean Squared Error as a measure of outliers in this type of data. 
+Using an LSTM (Long Short-Term Memory) algorithm on synthetic time series data for unsupervised anomaly detection.  It uses the Mean Squared Error as a measure of outliers in this type of data. 
 
 Some TODO:
 - [x] Keras (TF backend)
@@ -19,3 +19,5 @@ Other Approaches:
 2.  https://github.com/Vict0rSch/deep_learning/tree/master/keras/recurrent
 3.  http://simaaron.github.io/Estimating-rainfall-from-weather-radar-readings-using-recurrent-neural-networks/
 4.  https://github.com/khundman/telemanom/tree/no-labels
+
+
