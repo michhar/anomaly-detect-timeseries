@@ -2,6 +2,10 @@
 
 Using an LSTM (Long Short-Term Memory) algorithm on synthetic time series data for unsupervised anomaly detection.  It uses the Mean Squared Error as a measure of outliers in this type of data. 
 
+Diagram of original signal, smoothed signal and anomaly detection via MSE.
+
+![](Results.png)
+
 Some TODO:
 - [x] Keras (TF backend)
 - [ ] Estimates on real-world data (e.g. [this Kaggle rain dataset](https://www.kaggle.com/c/how-much-did-it-rain-ii/data))
