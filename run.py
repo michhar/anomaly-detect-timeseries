@@ -4,17 +4,14 @@ https://github.com/aurotripathy/lstm-anomaly-detect
 which is inspired by example from
 https://github.com/Vict0rSch/deep_learning/tree/master/keras/recurrent
 
-Uses the TensorFlow backend
+Uses the Keras API within TensorFlow 2
 The basic idea is to detect anomalies in synthetic, normalized 
-time-series data.
+time-series data in an unsupervised manner.
 """
 import time
 from datetime import datetime as dt
 import os
-from keras.layers.core import Dense, Activation, Dropout
-from keras.layers.recurrent import LSTM
-from keras.models import Sequential
-from keras.callbacks import History, EarlyStopping, Callback
+import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy import arange, sin, pi, random
@@ -150,26 +147,26 @@ def shape_data(arr, train=True):
 
 def build_model(anom, X_train, y_train):
     
-    cbs = [History(), EarlyStopping(monitor='val_loss', patience=config.patience, 
+    cbs = [tf.keras.callbacks.History(), tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=config.patience, 
         min_delta=config.min_delta, verbose=0)]
 
-    model = Sequential()
+    model = tf.keras.Sequential()
     # layers = [1, 50, 100, 1]
 
-    model.add(LSTM(
+    model.add(tf.keras.layers.LSTM(
         config.layers[0],
         input_shape=(None, 1), # could update 1 to n for multivariate
         return_sequences=True))
-    model.add(Dropout(config.dropout))
+    model.add(tf.keras.layers.Dropout(config.dropout))
 
-    model.add(LSTM(
+    model.add(tf.keras.layers.LSTM(
         config.layers[1],
         return_sequences=False))
-    model.add(Dropout(config.dropout))
+    model.add(tf.keras.layers.Dropout(config.dropout))
 
-    model.add(Dense(
+    model.add(tf.keras.layers.Dense(
         config.n_predictions))
-    model.add(Activation("linear"))
+    model.add(tf.keras.layers.Activation("linear"))
 
     start = time.time()
     # Loss function and optimizer (SGD-based)
@@ -270,7 +267,7 @@ def run_network(model=None, data=None):
     if model is None:
         model = build_model(X_train, y_train)
 
-    cbs = [History(), EarlyStopping(monitor='val_loss', patience=config.patience, 
+    cbs = [tf.keras.callbacks.History(), tf.keras.EarlyStopping(monitor='val_loss', patience=config.patience, 
         min_delta=config.min_delta, verbose=0)]
 
     try:

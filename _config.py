@@ -2,9 +2,7 @@ import yaml
 import json
 import sys
 import os
-# from elasticsearch import Elasticsearch
 
-# sys.path.append('../module') 
 
 class Config:
     '''Loads parameters from config.yaml into global object'''
