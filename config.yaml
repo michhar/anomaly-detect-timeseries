@@ -25,23 +25,23 @@ error_buffer: 100
 # ==================================
 loss_metric: 'mse'
 optimizer: 'rmsprop' # try adam, too
-validation_split: 0.2
-dropout: 0.3
-lstm_batch_size: 64
+validation_split: 0.1
+dropout: 0.1
+lstm_batch_size: 8
 
 # maximum number of epochs allowed (if early stopping criteria not met)
 epochs: 10
 
 # network architecture [<neurons in hidden layer>, <neurons in hidden layer>]
 # Size of input layer not listed - dependent on evr modules and types included (see 'evr_modules' and 'erv_types' above)
-layers: [50,100]
+layers: [10,10]
 
 # Number of consequetive training iterations to allow without decreasing the val_loss by at least min_delta 
 patience: 10
 min_delta: 0.0003
 
 # num previous timesteps provided to model to predict future values
-l_s: 250
+l_s: 10
 
 # number of steps ahead to predict
 n_predictions: 10
